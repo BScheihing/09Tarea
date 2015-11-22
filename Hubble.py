@@ -24,7 +24,7 @@ def bootstrap(d, v, N_B):
         H_gen[k] = fit_data(d_boot, v_boot)
     H_gen = np.sort(H_gen)
     H_025 = H_gen[N_B/40]
-    H_975 = H_gen[N_B - N_B/40]
+    H_975 = H_gen[N_B - N_B/40 - 1]
     return (H_025, H_975)
 
 datosHubble = np.loadtxt("data/hubble_original.dat")
@@ -42,10 +42,10 @@ for i in range(len(datosSNI)):
 
 N1 = len(dHubble)
 H1 = fit_data(dHubble, vHubble)
-H1_conf = bootstrap(dHubble, vHubble, int(np.ceil(N1*np.log(N1)**2)))
+H1_conf = bootstrap(dHubble, vHubble, int(N1**2))
 N2 = len(dSNI)
 H2 = fit_data(dSNI, vSNI)
-H2_conf = bootstrap(dSNI, vSNI, int(np.ceil(N2*np.log(N2)**2)))
+H2_conf = bootstrap(dSNI, vSNI, int(N2**2))
 
 plt.figure(1)
 plt.plot(dHubble, vHubble, 'ro')
