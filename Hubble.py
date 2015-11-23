@@ -44,27 +44,41 @@ for i in range(len(datosSNI)):
 
 N1 = len(dHubble)
 H1 = fit_data(dHubble, vHubble)
-H1_conf = bootstrap(dHubble, vHubble, int(N1**2))
+H1_conf = bootstrap(dHubble, vHubble, int(N1**3))
+print ""
+print "Datos usados por Edwin Hubble:"
+print "H_0 =", H1, "[km/s/Mpc]"
+print "Intervalo de confianza: ", H1_conf, "[km/s/Mpc]"
 N2 = len(dSNI)
 H2 = fit_data(dSNI, vSNI)
-H2_conf = bootstrap(dSNI, vSNI, int(N2**2))
+H2_conf = bootstrap(dSNI, vSNI, int(N2**3))
+print ""
+print "Datos en Freedman et al. 2000:"
+print "H_0 =", H2, "[km/s/Mpc]"
+print "Intervalo de confianza: ", H2_conf, "[km/s/Mpc]"
 
+xH = np.linspace(0, 2.2, 50)
+xS = np.linspace(0, 500, 50)
 plt.figure(1)
 plt.plot(dHubble, vHubble, 'ro', label='Mediciones originales')
-plt.plot(dHubble, H1*dHubble, 'b', label='Mejor ajuste')
-plt.plot(dHubble, H1_conf[0]*dHubble, 'g--', label='Regi'u'ó''n de confianza')
+plt.plot(xH, H1*xH, 'b', label='Mejor ajuste')
+plt.plot(xH, H1_conf[0]*xH, 'g--', label='Regi'u'ó''n de confianza')
 plt.legend(loc=2)
-plt.plot(dHubble, H1_conf[1]*dHubble, 'g--')
+plt.plot(xH, H1_conf[1]*xH, 'g--')
 plt.title('Datos originales de Edwin Hubble')
-plt.xlabel('Distancia D a las nebulosas [Mpc]')
+plt.xlabel('Distancia a las nebulosas [Mpc]')
 plt.ylabel('Velocidad de recesi'u'ó''n de las nebulosas [km/s]')
+plt.xlim([0, 2.2])
+plt.savefig('Hubble.eps')
 plt.figure(2)
 plt.plot(dSNI, vSNI, 'ro', label='Mediciones')
-plt.plot(dSNI, H2*dSNI, 'b', label='Mejor ajuste')
-plt.plot(dSNI, H2_conf[0]*dSNI, 'g--', label='Regi'u'ó''n de confianza')
+plt.plot(xS, H2*xS, 'b', label='Mejor ajuste')
+plt.plot(xS, H2_conf[0]*xS, 'g--', label='Regi'u'ó''n de confianza')
 plt.legend(loc=2)
-plt.plot(dSNI, H2_conf[1]*dSNI, 'g--')
+plt.plot(xS, H2_conf[1]*xS, 'g--')
 plt.title('Datos usando supernovas tipo I')
-plt.xlabel('Distancia D a las nebulosas [Mpc]')
+plt.xlabel('Distancia a las supernovas [Mpc]')
 plt.ylabel('Velocidad de recesi'u'ó''n de las nebulosas [km/s]')
+plt.xlim([0, 500])
+plt.savefig('Freedman.eps')
 plt.show()
