@@ -4,14 +4,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(447)
+np.random.seed(647)
+
+def fit_data(I, Z):
+    coef1 = np.polyfit(I, Z, 1)
+    coef2 = np.polyfit(Z, I, 1)
+    x_c = (coef1[1]*coef2[0]+coef2[1])/(1.0-coef1[0]*coef2[0])
+    y_c = coef1[0]*x_c + coef1[1]
+    m = np.tan((np.arctan(coef1[0]) + np.arctan(1.0/coef2[0])) / 2.0)
+    return (m, y_c - m*x_c)
+    #return coef1
+    #return (1/coef2[0], -coef2[1]/coef2[0])
 
 # Lee datos y hace un ajuste lineal
 bandI = 3.631*np.loadtxt("data/DR9Q.dat", usecols=(80,))
 errI = 3.631*np.loadtxt("data/DR9Q.dat", usecols=(81,))
 bandZ = 3.631*np.loadtxt("data/DR9Q.dat", usecols=(82,))
 errZ = 3.631*np.loadtxt("data/DR9Q.dat", usecols=(83,))
-coef = np.polyfit(bandI, bandZ, 1)
+coef = fit_data(bandI, bandZ)
 
 # Simulación de Monte-Carlo
 N_mc = 1000
@@ -19,7 +29,7 @@ params = np.zeros((2, N_mc))
 for k in range(N_mc):
     fake_bandI = np.random.normal(loc=bandI, scale=errI)
     fake_bandZ = np.random.normal(loc=bandZ, scale=errZ)
-    f_param = np.polyfit(fake_bandI, fake_bandZ, 1)
+    f_param = fit_data(fake_bandI, fake_bandZ)
     params[0][k] = f_param[0]
     params[1][k] = f_param[1]
 a = np.sort(params[0])
