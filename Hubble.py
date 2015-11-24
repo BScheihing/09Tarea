@@ -27,7 +27,7 @@ def bootstrap(d, v, N_B):
     H_gen = np.sort(H_gen)
     H_025 = H_gen[N_B/40]
     H_975 = H_gen[N_B - N_B/40 - 1]
-    return (H_025, H_975)
+    return (H_025, H_975, H_gen)
 
 datosHubble = np.loadtxt("data/hubble_original.dat")
 datosSNI = np.loadtxt("data/SNIa.dat", usecols=(1, 2))
@@ -47,18 +47,19 @@ H1 = fit_data(dHubble, vHubble)
 H1_conf = bootstrap(dHubble, vHubble, int(N1**3))
 print ""
 print "Datos usados por Edwin Hubble:"
-print "H_0 =", H1, "[km/s/Mpc]"
-print "Intervalo de confianza: ", H1_conf, "[km/s/Mpc]"
+print "H_0 =", H1, "[km/(s*Mpc)]"
+print "Intervalo de confianza: ", H1_conf[:2], "[km/(s*Mpc)]"
 N2 = len(dSNI)
 H2 = fit_data(dSNI, vSNI)
 H2_conf = bootstrap(dSNI, vSNI, int(N2**3))
 print ""
 print "Datos en Freedman et al. 2000:"
-print "H_0 =", H2, "[km/s/Mpc]"
-print "Intervalo de confianza: ", H2_conf, "[km/s/Mpc]"
+print "H_0 =", H2, "[km/(s*Mpc)]"
+print "Intervalo de confianza: ", H2_conf[:2], "[km/(s*Mpc)]"
 
 xH = np.linspace(0, 2.2, 50)
 xS = np.linspace(0, 500, 50)
+plt.clf()
 plt.figure(1)
 plt.plot(dHubble, vHubble, 'ro', label='Mediciones originales')
 plt.plot(xH, H1*xH, 'b', label='Mejor ajuste')
@@ -81,4 +82,22 @@ plt.xlabel('Distancia a las supernovas [Mpc]')
 plt.ylabel('Velocidad de recesi'u'ó''n de las nebulosas [km/s]')
 plt.xlim([0, 500])
 plt.savefig('Freedman.eps')
+plt.figure(3)
+plt.hist(H1_conf[2], bins=30, normed=True, label='Histograma de H_0')
+plt.axvline(x=H1, label='Mejor ajuste', color='r')
+plt.axvline(x=H1_conf[0], label='Intervalo de confianza', color='g')
+plt.xlabel('$H_0$ [km/(s Mpc)]')
+plt.title('Histograma de $H_0$ usando bootstrap, datos originales')
+plt.legend()
+plt.axvline(x=H1_conf[1], color='g')
+plt.savefig('H0origin.eps')
+plt.figure(4)
+plt.hist(H2_conf[2], bins=30, normed=True, label='Histograma de H_0')
+plt.axvline(x=H2, label='Mejor ajuste', color='r')
+plt.axvline(x=H2_conf[0], label='Intervalo de confianza', color='g')
+plt.xlabel('$H_0$ [km/(s Mpc)]')
+plt.title('Histograma de $H_0$ usando bootstrap, datos en Freedman et al.')
+plt.legend()
+plt.axvline(x=H2_conf[1], color='g')
+plt.savefig('H0Freed.eps')
 plt.show()

@@ -32,28 +32,46 @@ for k in range(N_mc):
     f_param = fit_data(fake_bandI, fake_bandZ)
     params[0][k] = f_param[0]
     params[1][k] = f_param[1]
-a = np.sort(params[0])
-b = np.sort(params[1])
-a_025 = a[N_mc/40]
-b_025 = b[N_mc/40]
-a_975 = a[N_mc - N_mc/40 - 1]
-b_975 = b[N_mc - N_mc/40 - 1]
+m = np.sort(params[0])
+p = np.sort(params[1])
+m_025 = m[N_mc/40]
+p_025 = p[N_mc/40]
+m_975 = m[N_mc - N_mc/40 - 1]
+p_975 = p[N_mc - N_mc/40 - 1]
 print "Ajuste lineal entre flujo de banda i y banda z"
-print "fz = a * fi + b"
-print "a =", coef[0]
-print "Intervalo de confianza para a: ", (a_025, a_975)
-print "b =", coef[1], "[10^-6 Jy]"
-print "Intervalo de confianza para b: ", (b_025, b_975), "[10^-6 Jy]"
+print "fz = m * fi + p"
+print "m =", coef[0]
+print "Intervalo de confianza para m: ", (m_025, m_975)
+print "p =", coef[1], "[10^-6 Jy]"
+print "Intervalo de confianza para p: ", (p_025, p_975), "[10^-6 Jy]"
 xI = np.linspace(-20, 500, 500)
 plt.figure(1)
 plt.errorbar(bandI, bandZ, xerr=errI, yerr=errZ, fmt='r.', label='Mediciones')
 plt.plot(xI, coef[0]*xI + coef[1], 'b', label='Mejor ajuste')
-plt.plot(xI, a_975*xI + b_975, 'g--', label='Regi'u'ó''n de confianza')
+plt.plot(xI, m_975*xI + p_975, 'g--', label='Regi'u'ó''n de confianza')
 plt.legend(loc=2)
-plt.plot(xI, a_025*xI + b_025, 'g--')
+plt.plot(xI, m_025*xI + p_025, 'g--')
 plt.title('Cu'u'á''sares: banda z v/s banda i')
 plt.xlabel('Flujo en banda i [$10^{-6}$ Jy]')
 plt.ylabel('Flujo en banda z [$10^{-6}$ Jy]')
 plt.xlim([-20, 500])
 plt.savefig('bandsiz.eps')
+plt.figure(2)
+plt.hist(m, bins=200, normed=True, label='Histograma de m')
+plt.axvline(x=coef[0], label='Mejor ajuste', color='r')
+plt.axvline(x=m_025, label='Intervalo de confianza', color='g')
+plt.xlabel('$m$')
+plt.title('Histograma de $m$ usando Monte-Carlo')
+plt.legend()
+plt.axvline(x=m_975, color='g')
+plt.savefig('mfitiz.eps')
+plt.figure(3)
+plt.hist(p, bins=200, normed=True, label='Histograma de p')
+plt.axvline(x=coef[1], label='Mejor ajuste', color='r')
+plt.axvline(x=p_025, label='Intervalo de confianza', color='g')
+plt.xlabel('$p \,[10^{-6} Jy]$')
+plt.title('Histograma de $p$ usando Monte-Carlo')
+plt.legend()
+plt.axvline(x=p_975, color='g')
+plt.savefig('pfitiz.eps')
 plt.show()
