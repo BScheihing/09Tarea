@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+Este script hace un ajuste lineal entre los datos del flujo de la banda i y el
+flujo de la banda z del catálogo de cuásares del Data Release 9 del Sloan
+Digital Sky Survey. Entrega los parámetros del ajuste con su intervalo de
+confianza.
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 

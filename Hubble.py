@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''
+Este script calcula la constante de Hubble junto con el intervalo de confianza
+asociado a su determinación. Utiliza los datos originales usados por Edwin
+Hubble y datos más recientes (Freedman et al. 2000), presentando así dos
+resultados para el ajuste.
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 
